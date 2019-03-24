@@ -17,9 +17,14 @@ void UPositionReporter::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Gets the objects name
 	FString objectName = GetOwner()->GetName();
-
-	UE_LOG(LogTemp, Warning, TEXT("Position Reporter starting for %s"), *objectName);
+	
+	//Gets the object position in the world
+	FString objectPosition = GetOwner()->GetTransform().GetLocation().ToString();
+	
+	//Prints to the output console the name of the object and its position
+	UE_LOG(LogTemp, Warning, TEXT("%s is at position: %s"), *objectName, *objectPosition);
 }
 
 
