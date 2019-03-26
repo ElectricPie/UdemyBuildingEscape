@@ -21,6 +21,8 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
+	void GetDefaultPawn();
+
 	void OpenDoor();
 
 public:	
@@ -34,6 +36,5 @@ private:
 	UPROPERTY(EditAnywhere)
 	ATriggerVolume* m_presurePad;
 
-	UPROPERTY(EditAnywhere)
 	AActor* m_interactableActor;
 };

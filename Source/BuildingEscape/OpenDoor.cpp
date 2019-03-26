@@ -2,6 +2,7 @@
 
 #include "OpenDoor.h"
 #include "GameFramework/Actor.h"
+#include "Engine/World.h"
 
 // Sets default values for this component's properties
 UOpenDoor::UOpenDoor()
@@ -9,8 +10,6 @@ UOpenDoor::UOpenDoor()
 	// Set this component to be initialized when the game starts, and to be ticked every frame.  You can turn these features
 	// off to improve performance if you don't need them.
 	PrimaryComponentTick.bCanEverTick = true;
-
-	// ...
 }
 
 
@@ -18,7 +17,10 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+
+	GetDefaultPawn();
 }
+
 
 // Called every frame
 void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
@@ -44,4 +46,10 @@ void UOpenDoor::OpenDoor()
 
 	//Sets the objects rotation to the new rotator
 	owner->SetActorRotation(newRotation);
+}
+
+void UOpenDoor::GetDefaultPawn()
+{
+	//Gets the default pawn
+	m_interactableActor = GetWorld()->GetFirstPlayerController()->GetPawn();
 }
