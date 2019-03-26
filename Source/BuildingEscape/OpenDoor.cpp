@@ -18,8 +18,20 @@ UOpenDoor::UOpenDoor()
 void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
+}
 
-	// ...
+// Called every frame
+void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
+{
+	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if(m_presurePad->IsOverlappingActor(m_interactableActor)) {
+		OpenDoor();
+	}
+}
+
+void UOpenDoor::OpenDoor()
+{
 	//Gets a pointer to the object
 	AActor *owner = GetOwner();
 
@@ -33,13 +45,3 @@ void UOpenDoor::BeginPlay()
 	//Sets the objects rotation to the new rotator
 	owner->SetActorRotation(newRotation);
 }
-
-
-// Called every frame
-void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
-{
-	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	// ...
-}
-
