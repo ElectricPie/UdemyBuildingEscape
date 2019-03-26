@@ -18,6 +18,9 @@ void UOpenDoor::BeginPlay()
 {
 	Super::BeginPlay();
 
+	//Gets a pointer to the object
+	m_owner = GetOwner();
+
 	GetDefaultPawn();
 }
 
@@ -29,23 +32,30 @@ void UOpenDoor::TickComponent(float DeltaTime, ELevelTick TickType, FActorCompon
 
 	if(m_presurePad->IsOverlappingActor(m_interactableActor)) {
 		OpenDoor();
+		m_lastDoorOpenTime = GetWorld()->GetTimeSeconds();
+	}
+
+	if (GetWorld()->GetTimeSeconds() - m_lastDoorOpenTime > m_doorCloseDelay) {
+		CloseDoor();
 	}
 }
 
 void UOpenDoor::OpenDoor()
 {
-	//Gets a pointer to the object
-	AActor *owner = GetOwner();
-
-	//Gets and prints the objects roation to the output log
-	FString roation = owner->GetTransform().GetRotation().Euler().ToString();
-	UE_LOG(LogTemp, Warning, TEXT("Object roation is: %s"), *roation);
-
 	//Creates a new rotator
-	FRotator newRotation = FRotator(0.0f, -45.0f, 0.0f);
+	FRotator newRotation = FRotator(0.0f, -m_openAngle, 0.0f);
 
 	//Sets the objects rotation to the new rotator
-	owner->SetActorRotation(newRotation);
+	m_owner->SetActorRotation(newRotation);
+}
+
+void UOpenDoor::CloseDoor()
+{
+	//Creates a new rotator
+	FRotator newRotation = FRotator(0.0f, 0.0f, 0.0f);
+
+	//Sets the objects rotation to the new rotator
+	m_owner->SetActorRotation(newRotation);
 }
 
 void UOpenDoor::GetDefaultPawn()
