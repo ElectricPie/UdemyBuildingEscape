@@ -26,6 +26,7 @@ public:
 
 private:
 	APlayerController* m_playerControler;
+	float m_reach = 100.0f;
 
 	void GetViewPoint();
 };

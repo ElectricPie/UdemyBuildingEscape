@@ -2,6 +2,7 @@
 
 #include "Grabber.h"
 #include "Engine/World.h"
+#include "DrawDebugHelpers.h"
 #include "GameFramework/PlayerController.h"
 
 #define OUT
@@ -46,6 +47,10 @@ void UGrabber::GetViewPoint()
 	m_playerControler->GetPlayerViewPoint(OUT playerViewPointLocation, OUT playerViewPointRotator);
 
 	//Post a message with the location and rotation of the viewpoints
-	UE_LOG(LogTemp, Warning, TEXT("Player Location: %s | Player Rotation: %s"), *playerViewPointLocation.ToString(), *playerViewPointRotator.ToString());
+	//UE_LOG(LogTemp, Warning, TEXT("Player Location: %s | Player Rotation: %s"), *playerViewPointLocation.ToString(), *playerViewPointRotator.ToString());
+
+	//Creates a debug line from the player
+	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotator.Vector() * m_reach;
+	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(225, 0, 0), false, 0.0f, 0, 10.0f);
 }
 
