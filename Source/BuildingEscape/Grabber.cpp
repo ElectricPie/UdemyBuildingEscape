@@ -26,6 +26,18 @@ void UGrabber::BeginPlay()
 	UE_LOG(LogTemp, Warning, TEXT("Grabber started"));
 
 	m_playerControler = GetWorld()->GetFirstPlayerController();
+
+	///Gets the physics handle on the object
+	m_physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	//Checks if the physics handle is found
+	if (m_physicsHandle)
+	{
+		
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s is missing physics handle component"), *GetOwner()->GetName());
+	}
 }
 
 
