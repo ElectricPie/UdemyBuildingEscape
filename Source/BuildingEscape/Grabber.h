@@ -33,7 +33,13 @@ private:
 	UPhysicsHandleComponent* m_physicsHandle = nullptr;
 	UInputComponent* m_input = nullptr;
 
-	void GetViewPoint();
+	void SetUpActions();
+
+	void GetPhysicsHandle();
+
+	void RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd);
+
+	const FHitResult GetFirstPhysicsBodyInReach();
 
 	void Grab();
 

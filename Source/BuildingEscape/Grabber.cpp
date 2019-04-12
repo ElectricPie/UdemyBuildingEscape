@@ -17,7 +17,6 @@ UGrabber::UGrabber()
 	// ...
 }
 
-
 // Called when the game starts
 void UGrabber::BeginPlay()
 {
@@ -27,18 +26,13 @@ void UGrabber::BeginPlay()
 
 	m_playerControler = GetWorld()->GetFirstPlayerController();
 
-	///Gets the physics handle on the object
-	m_physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
-	//Checks if the physics handle is found
-	if (m_physicsHandle)
-	{
-		
-	}
-	else
-	{
-		UE_LOG(LogTemp, Error, TEXT("%s is missing physics handle component"), *GetOwner()->GetName());
-	}
+	GetPhysicsHandle();
 
+	SetUpActions();
+}
+
+void UGrabber::SetUpActions()
+{
 	///Gets the input component on the object
 	m_input = GetOwner()->FindComponentByClass<UInputComponent>();
 	//Checks if the input component is found
@@ -53,28 +47,32 @@ void UGrabber::BeginPlay()
 	}
 }
 
+void UGrabber::GetPhysicsHandle()
+{
+	///Gets the physics handle on the object
+	m_physicsHandle = GetOwner()->FindComponentByClass<UPhysicsHandleComponent>();
+	//Checks if the physics handle is found
+	if (m_physicsHandle)
+	{
+
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s is missing physics handle component"), *GetOwner()->GetName());
+	}
+}
 
 // Called every frame
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
-
-	GetViewPoint();
 }
 
-void UGrabber::GetViewPoint()
+/*
+Creates a ray cast from the defaut pawn to a point forward
+*/
+void UGrabber::RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd)
 {
-	///Creates storage for player view points
-	FVector playerViewPointLocation;
-	FRotator playerViewPointRotator;
-
-	///Gets viewpoint values
-	m_playerControler->GetPlayerViewPoint(OUT playerViewPointLocation, OUT playerViewPointRotator);
-
-	///Creates a debug line from the player
-	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotator.Vector() * m_reach;
-	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(225, 0, 0), false, 0.0f, 0, 10.0f);
-
 	///Set up query Parameters
 	FCollisionQueryParams traceParameters(FName(TEXT("")), false, GetOwner());
 
@@ -95,9 +93,29 @@ void UGrabber::GetViewPoint()
 	}
 }
 
+const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
+{
+	///Creates storage for player view points
+	FVector playerViewPointLocation;
+	FRotator playerViewPointRotator;
+
+	///Gets viewpoint values
+	m_playerControler->GetPlayerViewPoint(OUT playerViewPointLocation, OUT playerViewPointRotator);
+
+	///Creates a debug line from the player
+	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotator.Vector() * m_reach;
+	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(225, 0, 0), false, 0.0f, 0, 10.0f);
+
+	RayCast(playerViewPointLocation, lineTraceEnd);
+
+	return FHitResult();
+}
+
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
+
+	GetFirstPhysicsBodyInReach();
 }
 
 void UGrabber::Release()
