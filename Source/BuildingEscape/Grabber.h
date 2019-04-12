@@ -5,6 +5,7 @@
 #include "CoreMinimal.h"
 #include "Components/ActorComponent.h"
 #include "PhysicsEngine/PhysicsHandleComponent.h"
+#include "Components/InputComponent.h"
 #include "Grabber.generated.h"
 
 
@@ -29,8 +30,10 @@ private:
 	APlayerController* m_playerControler;
 	float m_reach = 100.0f;
 
-
 	UPhysicsHandleComponent* m_physicsHandle = nullptr;
+	UInputComponent* m_input = nullptr;
 
 	void GetViewPoint();
+
+	void Grab();
 };

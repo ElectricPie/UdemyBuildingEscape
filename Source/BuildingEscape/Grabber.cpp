@@ -38,6 +38,18 @@ void UGrabber::BeginPlay()
 	{
 		UE_LOG(LogTemp, Error, TEXT("%s is missing physics handle component"), *GetOwner()->GetName());
 	}
+
+	///Gets the input component on the object
+	m_input = GetOwner()->FindComponentByClass<UInputComponent>();
+	//Checks if the input component is found
+	if (m_input)
+	{
+		m_input->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+	}
+	else
+	{
+		UE_LOG(LogTemp, Error, TEXT("%s is missing input component"), *GetOwner()->GetName());
+	}
 }
 
 
@@ -80,5 +92,10 @@ void UGrabber::GetViewPoint()
 	if (hitActor) {
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *hitActor->GetName());
 	}
+}
+
+void UGrabber::Grab()
+{
+
 }
 
