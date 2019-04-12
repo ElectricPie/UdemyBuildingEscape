@@ -45,6 +45,7 @@ void UGrabber::BeginPlay()
 	if (m_input)
 	{
 		m_input->BindAction("Grab", IE_Pressed, this, &UGrabber::Grab);
+		m_input->BindAction("Grab", IE_Released, this, &UGrabber::Release);
 	}
 	else
 	{
@@ -96,6 +97,11 @@ void UGrabber::GetViewPoint()
 
 void UGrabber::Grab()
 {
+	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
+}
 
+void UGrabber::Release()
+{
+	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
 }
 

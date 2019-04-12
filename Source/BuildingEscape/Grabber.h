@@ -36,4 +36,6 @@ private:
 	void GetViewPoint();
 
 	void Grab();
+
+	void Release();
 };
