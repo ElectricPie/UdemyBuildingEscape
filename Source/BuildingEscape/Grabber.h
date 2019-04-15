@@ -28,6 +28,7 @@ public:
 
 private:
 	APlayerController* m_playerControler;
+	UPROPERTY(EditAnywhere)
 	float m_reach = 100.0f;
 
 	UPhysicsHandleComponent* m_physicsHandle = nullptr;
@@ -37,7 +38,7 @@ private:
 
 	void GetPhysicsHandle();
 
-	void RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd);
+	FHitResult RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd);
 
 	const FHitResult GetFirstPhysicsBodyInReach();
 

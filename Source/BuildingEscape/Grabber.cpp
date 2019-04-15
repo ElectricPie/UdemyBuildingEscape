@@ -1,3 +1,4 @@
+
 // Fill out your copyright notice in the Description page of Project Settings.
 
 #include "Grabber.h"
@@ -66,12 +67,26 @@ void UGrabber::GetPhysicsHandle()
 void UGrabber::TickComponent(float DeltaTime, ELevelTick TickType, FActorComponentTickFunction* ThisTickFunction)
 {
 	Super::TickComponent(DeltaTime, TickType, ThisTickFunction);
+
+	if (m_physicsHandle->GrabbedComponent) {
+		///Creates storage for player view points
+		FVector playerViewPointLocation;
+		FRotator playerViewPointRotator;
+
+		///Gets viewpoint values
+		m_playerControler->GetPlayerViewPoint(OUT playerViewPointLocation, OUT playerViewPointRotator);
+
+		///Creates a debug line from the player
+		FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotator.Vector() * m_reach;
+
+		m_physicsHandle->SetTargetLocation(lineTraceEnd);
+	}
 }
 
 /*
 Creates a ray cast from the defaut pawn to a point forward
 */
-void UGrabber::RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd)
+FHitResult UGrabber::RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd)
 {
 	///Set up query Parameters
 	FCollisionQueryParams traceParameters(FName(TEXT("")), false, GetOwner());
@@ -91,6 +106,8 @@ void UGrabber::RayCast(FVector &playerViewPointLocation, FVector &lineTraceEnd)
 	if (hitActor) {
 		UE_LOG(LogTemp, Warning, TEXT("Hit: %s"), *hitActor->GetName());
 	}
+
+	return hit;
 }
 
 const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
@@ -104,22 +121,29 @@ const FHitResult UGrabber::GetFirstPhysicsBodyInReach()
 
 	///Creates a debug line from the player
 	FVector lineTraceEnd = playerViewPointLocation + playerViewPointRotator.Vector() * m_reach;
-	DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(225, 0, 0), false, 0.0f, 0, 10.0f);
+	//DrawDebugLine(GetWorld(), playerViewPointLocation, lineTraceEnd, FColor(225, 0, 0), false, 0.0f, 0, 10.0f);
 
-	RayCast(playerViewPointLocation, lineTraceEnd);
 
-	return FHitResult();
+	return RayCast(playerViewPointLocation, lineTraceEnd);
 }
 
 void UGrabber::Grab()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Grabbing"));
 
-	GetFirstPhysicsBodyInReach();
+	auto HitResult = GetFirstPhysicsBodyInReach();
+	auto ComponentToGrab = HitResult.GetComponent();
+	auto ActorHit = HitResult.GetActor();
+
+	if (ActorHit) {
+		//Attached a physics handle to the object
+		m_physicsHandle->GrabComponent(ComponentToGrab, NAME_None, ComponentToGrab->GetOwner()->GetActorLocation(), true);
+	}	
 }
 
 void UGrabber::Release()
 {
 	UE_LOG(LogTemp, Warning, TEXT("Releasing"));
+	m_physicsHandle->ReleaseComponent();
 }
 
