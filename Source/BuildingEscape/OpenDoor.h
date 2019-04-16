@@ -21,8 +21,6 @@ protected:
 	// Called when the game starts
 	virtual void BeginPlay() override;
 
-	void GetDefaultPawn();
-
 	void OpenDoor();
 
 	void CloseDoor();
@@ -33,17 +31,23 @@ public:
 
 private:
 	UPROPERTY(EditAnywhere)
-	float m_openAngle = 90.0f;
-
-	UPROPERTY(EditAnywhere)
 	ATriggerVolume* m_presurePad;
 
 	AActor* m_owner;
 
 	AActor* m_interactableActor;
 
+	//How far the door opens
+	UPROPERTY(EditAnywhere)
+	float m_openAngle = 90.0f;
+
 	UPROPERTY(EditAnywhere)
 	float m_doorCloseDelay;
 
 	float m_lastDoorOpenTime;
+
+	UPROPERTY(EditAnywhere)
+	float m_requiredMass = 60.0f;
+
+	float GetTotalMassOnTrigger();
 };
